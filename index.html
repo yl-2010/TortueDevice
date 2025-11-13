@@ -59,11 +59,11 @@
     <button slot="ar-button" id="ar-button">View in AR</button>
   </model-viewer>
   <div id="download-panel">
-    <div>Download starting… If it doesn’t, use the link below.</div>
+    <div>Download the model:</div>
     <a id="download-link" href="5%20meter%20tall%20version.usdz" download="5 meter tall version.usdz">Download model (.usdz)</a>
   </div>
   <script>
-    // iOS Safari keeps AR Quick Look; others auto-download the USDZ
+    // iOS Safari keeps AR Quick Look; others see a download button
     window.addEventListener('DOMContentLoaded', () => {
       const mv = document.querySelector('model-viewer');
       const panel = document.getElementById('download-panel');
@@ -92,18 +92,6 @@
         link.href = usdzPath;
         link.setAttribute('download', '5 meter tall version.usdz');
         panel.style.display = 'flex';
-      }
-
-      // Try to auto-download
-      try {
-        const a = document.createElement('a');
-        a.href = usdzPath;
-        a.setAttribute('download', '5 meter tall version.usdz');
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => a.remove(), 0);
-      } catch (e) {
-        // If blocked, the visible fallback link remains
       }
     });
   </script>
