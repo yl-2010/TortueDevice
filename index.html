@@ -29,8 +29,14 @@
       font-size: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-    #ar-fallback {
+    #download-panel {
       display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+    #download-link {
       text-decoration: none;
       color: #000;
       border: 2px solid #000;
@@ -52,12 +58,16 @@
   >
     <button slot="ar-button" id="ar-button">View in AR</button>
   </model-viewer>
-  <a id="ar-fallback" href="5%20meter%20tall%20version.usdz" rel="ar">View in AR</a>
+  <div id="download-panel">
+    <div>Download starting… If it doesn’t, use the link below.</div>
+    <a id="download-link" href="5%20meter%20tall%20version.usdz" download="5 meter tall version.usdz">Download model (.usdz)</a>
+  </div>
   <script>
     // iOS Safari keeps AR Quick Look; others auto-download the USDZ
     window.addEventListener('DOMContentLoaded', () => {
       const mv = document.querySelector('model-viewer');
-      const fallback = document.getElementById('ar-fallback');
+      const panel = document.getElementById('download-panel');
+      const link = document.getElementById('download-link');
       const usdzPath = '5%20meter%20tall%20version.usdz';
 
       function isIOSSafari() {
@@ -77,12 +87,11 @@
       // Non-iOS Safari: hide the AR UI and trigger download
       if (mv) mv.style.display = 'none';
 
-      // Configure visible fallback in case auto-download is blocked
-      if (fallback) {
-        fallback.href = usdzPath;
-        fallback.setAttribute('download', '5 meter tall version.usdz');
-        fallback.textContent = 'Download model (.usdz)';
-        fallback.style.display = 'inline-block';
+      // Show visible download panel and configure link
+      if (panel && link) {
+        link.href = usdzPath;
+        link.setAttribute('download', '5 meter tall version.usdz');
+        panel.style.display = 'flex';
       }
 
       // Try to auto-download
