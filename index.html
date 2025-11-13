@@ -15,6 +15,9 @@
       background-color: #f0f0f0;
       flex-direction: column;
     }
+    #ar-link {
+      display: none; /* default hidden to avoid flash in non-supported browsers */
+    }
     #ar-button {
       position: absolute;
       left: 50%;
@@ -46,26 +49,19 @@
       background: #fff;
     }
   </style>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
-  <model-viewer
-    ar
-    ar-modes="quick-look"
-    ios-src="5%20meter%20tall%20version.usdz"
-    poster="thumbnail.png"
-    style="width: 100%; height: 100vh; background: #f0f0f0; position: relative;"
-  >
-    <button slot="ar-button" id="ar-button">View in AR</button>
-  </model-viewer>
+  <a id="ar-link" rel="ar" href="5%20meter%20tall%20version.usdz" style="position: relative; width: 100%; height: 100vh;">
+    <button id="ar-button">View in AR</button>
+  </a>
   <div id="download-panel">
     <div>Download the model:</div>
     <a id="download-link" href="5%20meter%20tall%20version.usdz" download="5 meter tall version.usdz">Download model (.usdz)</a>
   </div>
   <script>
-    // iOS Safari keeps AR Quick Look; others see a download button
+    // Show AR Quick Look only in iOS Safari; others get a download option
     window.addEventListener('DOMContentLoaded', () => {
-      const mv = document.querySelector('model-viewer');
+      const arLink = document.getElementById('ar-link');
       const panel = document.getElementById('download-panel');
       const link = document.getElementById('download-link');
       const usdzPath = '5%20meter%20tall%20version.usdz';
@@ -83,18 +79,13 @@
       }
 
       if (isIOSSafari()) {
-        // Keep current AR Quick Look experience
-        return;
-      }
-
-      // Non-iOS Safari: hide the AR UI and trigger download
-      if (mv) mv.style.display = 'none';
-
-      // Show visible download panel and configure link
-      if (panel && link) {
-        link.href = usdzPath;
-        link.setAttribute('download', '5 meter tall version.usdz');
-        panel.style.display = 'flex';
+        if (arLink) arLink.style.display = 'block';
+      } else {
+        if (panel && link) {
+          link.href = usdzPath;
+          link.setAttribute('download', '5 meter tall version.usdz');
+          panel.style.display = 'flex';
+        }
       }
     });
   </script>
