@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>View in AR (iOS Safari)</title>
+  <title>TORTURE DEVICE!!!</title>
   <style>
     body {
       display: flex;
@@ -54,12 +54,47 @@
   </model-viewer>
   <a id="ar-fallback" href="5%20meter%20tall%20version.usdz" rel="ar">View in AR</a>
   <script>
-    // Show a basic fallback link if AR can't be activated
+    // iOS Safari keeps AR Quick Look; others auto-download the USDZ
     window.addEventListener('DOMContentLoaded', () => {
       const mv = document.querySelector('model-viewer');
       const fallback = document.getElementById('ar-fallback');
-      if (!mv || !mv.canActivateAR) {
+      const usdzPath = '5%20meter%20tall%20version.usdz';
+
+      function isIOSSafari() {
+        const ua = navigator.userAgent;
+        const isiOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isWebKit = /WebKit/.test(ua);
+        const isChromeiOS = /CriOS/.test(ua);
+        const isFirefoxiOS = /FxiOS/.test(ua);
+        return isiOS && isWebKit && !isChromeiOS && !isFirefoxiOS;
+      }
+
+      if (isIOSSafari()) {
+        // Keep current AR Quick Look experience
+        return;
+      }
+
+      // Non-iOS Safari: hide the AR UI and trigger download
+      if (mv) mv.style.display = 'none';
+
+      // Configure visible fallback in case auto-download is blocked
+      if (fallback) {
+        fallback.href = usdzPath;
+        fallback.setAttribute('download', '5 meter tall version.usdz');
+        fallback.textContent = 'Download model (.usdz)';
         fallback.style.display = 'inline-block';
+      }
+
+      // Try to auto-download
+      try {
+        const a = document.createElement('a');
+        a.href = usdzPath;
+        a.setAttribute('download', '5 meter tall version.usdz');
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => a.remove(), 0);
+      } catch (e) {
+        // If blocked, the visible fallback link remains
       }
     });
   </script>
