@@ -72,11 +72,14 @@
 
       function isIOSSafari() {
         const ua = navigator.userAgent;
-        const isiOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        const isWebKit = /WebKit/.test(ua);
-        const isChromeiOS = /CriOS/.test(ua);
-        const isFirefoxiOS = /FxiOS/.test(ua);
-        return isiOS && isWebKit && !isChromeiOS && !isFirefoxiOS;
+        const isiOS =
+          /iPad|iPhone|iPod/.test(ua) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS desktop mode
+        const isWebKit = /AppleWebKit/.test(ua);
+        const hasSafariToken = /Safari/.test(ua) && /Version\//.test(ua);
+        const isOtherWebKit =
+          /CriOS|FxiOS|EdgiOS|OPiOS|OPT|DuckDuckGo|GSA|FBAN|FBAV|Instagram|Twitter|Puffin|Brave|Vivaldi|YaBrowser|UCBrowser|QQBrowser|MiuiBrowser|Arc/i.test(ua);
+        return isiOS && isWebKit && hasSafariToken && !isOtherWebKit;
       }
 
       if (isIOSSafari()) {
